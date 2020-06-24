@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,6 +9,27 @@
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/bootstrap-responsive.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/font-awesome.css" />
+
+    <script src="~/js/vue.min.js"></script>
+    <script src="~/js/axios.min.js"></script>
+    <script src="~/js/moment.js"></script>
+    <script src="~/js/vue_filter.js"></script>
+    <script src="~/js/vue-component.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 1pc;
+            font-family: Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif !important;
+            -webkit-font-smoothing: antialiased;
+            font-size: 14px;
+            line-height: 20px;
+            background-color: rgb(235, 236, 237) !important;
+            padding-top: 0px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -17,15 +40,39 @@
                     <a name="top" class="brand text_bnb_strong bnb_middle" href="" style="line-height:20px">ERestaurant</a>
                     <div class="nav-collapse collapse" style="height: 0px;">
                         <ul class="nav pull-left" style="margin-right: 0px;">
-                            <li class="divider-vertical"></li>
-                            <li class="dropdown"><a class="text_bnb_strong" href="">订单管理</a></li>
-                            <li class="divider-vertical"></li>
-                            <li class="dropdown"><a class="text_bnb_strong" href="">菜品管理</a></li>
-                            <li class="divider-vertical"></li>
-                            <li class="dropdown"><a class="text_bnb_strong" href="">分类管理</a></li>
-                            <li class="divider-vertical"></li>
+                            @if (User.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value == "1")
+                            {
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/TakeOut/Order">外卖订单</a></li>
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/Food/FoodList">菜品管理</a></li>
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/Group/List">分类管理</a></li>
+                                <li class="divider-vertical"></li>
+                            }
+                            else
+                            {
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/Home/Index">首页</a></li>
+                                <li class="divider-vertical"></li>
+                                <li class="divider-vertical"></li>
+                                <li class="dropdown"><a class="text_bnb_strong" href="/Home/Cart">购物车</a></li>
+                                <li class="divider-vertical"></li>
+                            }
                         </ul>
-                        <ul class="nav pull-right" id="destoon_member"><li class="dropdown"><a href="">登录</a></li><li class="dropdown"><a href="">注册</a></li></ul>
+                        <ul class="nav pull-right" id="destoon_member">
+                            @if (string.IsNullOrEmpty(User.Identity.Name))
+                            {
+                                <li class="dropdown"><a href="/Login/Index">登录</a></li>
+                                <li class="dropdown"><a href="/Login/Register">注册</a></li>
+                            }
+                            else
+                            {
+                                <li class="dropdown"><a>欢迎你，@User.Identity.Name</a></li>
+                                <li class="dropdown"><a href="/Login/Change">修改密码</a></li>
+                                <li class="dropdown"><a href="/Login/Logout">退出</a></li>
+                            }
+                        </ul>
                     </div>
                 </div>
             </div>
